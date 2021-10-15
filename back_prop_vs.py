@@ -246,7 +246,7 @@ def write_to_csv_2(
     except IOError:
         f = open(fname, "a+")
         f.write(
-            "Execution Time,Time to Train, Test Accuracy Score, Test Loss Score, Train Accuracy Score, Train Loss Score\n"
+            "Execution Time,Time to Train, Test Accuracy Score, Train Accuracy Score, Train Loss Score\n"
         )
     finally:
         f.close()
