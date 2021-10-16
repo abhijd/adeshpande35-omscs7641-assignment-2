@@ -19,6 +19,7 @@ from sklearn.tree import DecisionTreeClassifier
 from yellowbrick.model_selection import LearningCurve, ValidationCurve
 import dataframe_image as dfi
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import f1_score
 import mlrose_hiive
 #import mlrose
 
@@ -58,7 +59,7 @@ def run():
     #backprop using gradient descent
     create_intake()
     loop = [
-        [liv_train, liv_test, liv_ans_train, liv_ans_test, "liver"],
+      #  [liv_train, liv_test, liv_ans_train, liv_ans_test, "liver"],
         [bm_train, bm_test, bm_ans_train, bm_ans_test, "bank marketing"],
     ]
     for x in loop:
@@ -68,21 +69,25 @@ def run():
         print()
         classifier = mlrose_hiive.NeuralNetwork(hidden_nodes=[6], activation='relu',
                                algorithm = 'gradient_descent',early_stopping = True,
-                               max_attempts = 100, max_iters = 5000,
-                               bias = True, learning_rate = .01,
+                               max_attempts = 200, max_iters = 10000,
+                               bias = True, learning_rate = .001,
                                restarts=0, curve = True, random_state=65)
         stime = time.time()
         classifier.fit(X_train, y_train)
+        #make_save_learning_curve_chart( "gradient descent",classifier, "neural_network", "accuracy", np.linspace(0.1, 1.0, 10), None, 8, name, X_train, y_train)
+        #make_save_learning_curve_chart( "gradient descent",classifier, "neural_network", "f1", np.linspace(0.1, 1.0, 10), None, 8, name, X_train, y_train)
         etime = time.time()
         btime = etime-stime
         y_train_pred = classifier.predict(X_train)
         train_acc_score = accuracy_score(y_train, y_train_pred)
+        train_f1_score = f1_score(y_train, y_train_pred)
         train_loss_score = classifier.loss
         y_pred = classifier.predict(X_test)
         pred_acc_score = accuracy_score(y_test, y_pred)
+        pred_f1_score = f1_score(y_test, y_pred)
         pred_loss_score = classifier.loss
         fitness_curve = classifier.fitness_curve
-        write_to_csv_2(name, "gradient_descent", btime, pred_acc_score, train_acc_score, train_loss_score)
+        write_to_csv_2(name, "gradient descent", btime, pred_acc_score, pred_f1_score, train_acc_score, train_f1_score, train_loss_score)
 
         plt.plot(fitness_curve)
         plt.xlabel("Iters")
@@ -92,21 +97,25 @@ def run():
 
         classifier = mlrose_hiive.NeuralNetwork(hidden_nodes=[6], activation='relu',
                                algorithm = 'simulated_annealing',early_stopping = True,
-                               max_attempts = 100, max_iters = 5000,
-                               bias = True, learning_rate = .01,
+                               max_attempts = 200, max_iters = 10000,
+                               bias = True, learning_rate = .001,
                                restarts=0, curve = True, random_state=65, schedule=mlrose_hiive.GeomDecay(init_temp=10000000000, decay=0.55, min_temp=0.0001))
         stime = time.time()
         classifier.fit(X_train, y_train)
+        #make_save_learning_curve_chart( "simulated_annealing",classifier, "neural_network", "accuracy", np.linspace(0.1, 1.0, 10), None, 8, name, X_train, y_train)
+        #make_save_learning_curve_chart( "simulated_annealingt",classifier, "neural_network", "f1", np.linspace(0.1, 1.0, 10), None, 8, name, X_train, y_train)
         etime = time.time()
         btime = etime-stime
         y_train_pred = classifier.predict(X_train)
         train_acc_score = accuracy_score(y_train, y_train_pred)
+        train_f1_score = f1_score(y_train, y_train_pred)
         train_loss_score = classifier.loss
         y_pred = classifier.predict(X_test)
         pred_acc_score = accuracy_score(y_test, y_pred)
+        pred_f1_score = f1_score(y_test, y_pred)
         pred_loss_score = classifier.loss
         fitness_curve = classifier.fitness_curve
-        write_to_csv_2(name, "simulated_annealing", btime, pred_acc_score, train_acc_score, train_loss_score)
+        write_to_csv_2(name, "simulated_annealing", btime, pred_acc_score, pred_f1_score, train_acc_score, train_f1_score, train_loss_score)
 
         plt.plot(fitness_curve)
         plt.xlabel("Iters")
@@ -116,21 +125,25 @@ def run():
 
         classifier = mlrose_hiive.NeuralNetwork(hidden_nodes=[6], activation='relu',
                                algorithm = 'random_hill_climb',early_stopping = True,
-                               max_attempts = 100, max_iters = 5000,
-                               bias = True, learning_rate = .01,
+                               max_attempts = 200, max_iters = 10000,
+                               bias = True, learning_rate = .001,
                                restarts=10, curve = True, random_state=65)
         stime = time.time()
         classifier.fit(X_train, y_train)
+        #make_save_learning_curve_chart( "random_hc",classifier, "neural_network", "accuracy", np.linspace(0.1, 1.0, 10), None, 8, name, X_train, y_train)
+        #make_save_learning_curve_chart( "random_hc",classifier, "neural_network", "f1", np.linspace(0.1, 1.0, 10), None, 8, name, X_train, y_train)
         etime = time.time()
         btime = etime-stime
         y_train_pred = classifier.predict(X_train)
         train_acc_score = accuracy_score(y_train, y_train_pred)
+        train_f1_score = f1_score(y_train, y_train_pred)
         train_loss_score = classifier.loss
         y_pred = classifier.predict(X_test)
         pred_acc_score = accuracy_score(y_test, y_pred)
+        pred_f1_score = f1_score(y_test, y_pred)
         pred_loss_score = classifier.loss
         fitness_curve = classifier.fitness_curve
-        write_to_csv_2(name, "random_hc", btime, pred_acc_score, train_acc_score, train_loss_score)
+        write_to_csv_2(name, "random_hc", btime, pred_acc_score, pred_f1_score, train_acc_score, train_f1_score, train_loss_score)
 
         plt.plot(fitness_curve)
         plt.xlabel("Iters")
@@ -140,21 +153,25 @@ def run():
 
         classifier = mlrose_hiive.NeuralNetwork(hidden_nodes=[6], activation='relu',
                                algorithm = 'genetic_alg',early_stopping = True,
-                               max_attempts = 100, max_iters = 5000,
-                               bias = True, learning_rate = .01,
+                               max_attempts = 200, max_iters = 10000,
+                               bias = True, learning_rate = .001,
                                restarts=0, curve = True, random_state=65, pop_size=400, mutation_prob=0.05)
         stime = time.time()
         classifier.fit(X_train, y_train)
+        #make_save_learning_curve_chart( "genetic_algo",classifier, "neural_network", "accuracy", np.linspace(0.1, 1.0, 10), None, 8, name, X_train, y_train)
+        #make_save_learning_curve_chart( "genetic_algo",classifier, "neural_network", "f1", np.linspace(0.1, 1.0, 10), None, 8, name, X_train, y_train)
         etime = time.time()
         btime = etime-stime
         y_train_pred = classifier.predict(X_train)
         train_acc_score = accuracy_score(y_train, y_train_pred)
+        train_f1_score = f1_score(y_train, y_train_pred)
         train_loss_score = classifier.loss
         y_pred = classifier.predict(X_test)
         pred_acc_score = accuracy_score(y_test, y_pred)
+        pred_f1_score = f1_score(y_test, y_pred)
         pred_loss_score = classifier.loss
         fitness_curve = classifier.fitness_curve
-        write_to_csv_2(name, "genetic_algo", btime, pred_acc_score, train_acc_score, train_loss_score)
+        write_to_csv_2(name, "genetic_algo", btime, pred_acc_score, pred_f1_score, train_acc_score, train_f1_score, train_loss_score)
 
         plt.plot(fitness_curve)
         plt.xlabel("Iters")
@@ -225,20 +242,22 @@ def create_intake():
 
     bm_train = scaler.fit_transform(bm_train)
     bm_test = scaler.fit_transform(bm_test)
+    print(np.unique(bm_ans_train))
+    print(np.unique(bm_ans_test))
 
 
 def make_save_learning_curve_chart(
-    model, classifier_n, scoring, sizes, cv, n_jobs, dataset_name, X_train, y_train
+    algo, model, classifier_n, scoring, sizes, cv, n_jobs, dataset_name, X_train, y_train
 ):
     v = LearningCurve(model, cv=cv, scoring=scoring, train_sizes=sizes, n_jobs=n_jobs)
     v.fit(X_train, y_train)
-    v.show("files/{}_learning_curve_{}.png".format(classifier_n, dataset_name))
+    v.show("files/{}_learning_curve_{}_{}.png".format(classifier_n, dataset_name, algo))
     plt.clf()
 
-#write_to_csv_2(name, "genetic_alg", btime, pred_acc_score, pred_loss_score, train_acc_score, train_loss_score)
+#write_to_csv_2(name, "genetic_algo", btime, pred_acc_score, pred_f1_score, train_acc_score, train_f1_score, train_loss_score)
 
 def write_to_csv_2(
-    dataset_name, fitness_fn, train_time, pred_acc_score, train_acc_score, train_loss_score
+    dataset_name, fitness_fn, train_time, pred_acc_score, pred_f1_score, train_acc_score, train_f1_score, train_loss_score
 ):
     fname = "files/{}_neural_network_{}_metrics.csv".format(dataset_name, fitness_fn)
     try:
@@ -246,17 +265,19 @@ def write_to_csv_2(
     except IOError:
         f = open(fname, "a+")
         f.write(
-            "Execution Time,Time to Train, Test Accuracy Score, Train Accuracy Score, Train Loss Score\n"
+            "Execution Time,Time to Train,Test Accuracy Score,Test F1 Score,Train Accuracy Score,Train F1 Score,Train Loss Score\n"
         )
     finally:
         f.close()
     with open(fname, "a+") as f:
         f.write(
-            "{},{},{},{},{}\n".format(
+            "{},{},{},{},{},{},{}\n".format(
                 time.time(),
                 train_time,
                 pred_acc_score,
+                pred_f1_score,
                 train_acc_score,
+                train_f1_score,
                 train_loss_score
 
             )
