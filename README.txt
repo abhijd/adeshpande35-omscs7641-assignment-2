@@ -14,4 +14,4 @@
 
 ## python back_prop_vs.py
 
-## Run this for tuning the Neural Network with back prop (gradient descent) and the three local random search algos
+### Run this for tuning the Neural Network with back prop (gradient descent) and the three local random search algos
